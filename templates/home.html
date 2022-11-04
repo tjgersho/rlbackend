@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+ 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                clifford: '#da373d',
+              }
+            }
+          }
+        }
+      </script>
+    <title>RL Backend</title>
+
+</head>
+  <body>
+    <body>
+        <div class="flex flex-col items-center w-full">
+            <h1 class="font-bold text-xl">RL Backend API:</h1>
+
+            <p class="font-medium text-lg">Try these endpoints:</p>
+
+            <a href="/api/position/">/api/position/</a>
+            <a href="/api/velocity/">/api/velocity/</a>
+            <a href="/api/acceleration/">/api/acceleration/</a>
+            <a href="/api/rocket/">/api/rocket/</a>
+        </div>
+    </body>
+</html>

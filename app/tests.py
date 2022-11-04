@@ -14,20 +14,12 @@ class AppTestCase(TestCase):
     def setUp(self):
         # Postition.objects.create(X=1, Y=0, Z=0, created=datetime.datetime(2015, 2, 21, 19, 38, 32, 209148))
         # Postition.objects.create(X=1, Y=0, Z=0, created=datetime.datetime(2015, 2, 21, 19, 38, 32, 209148))
-        ini_time_for_now = datetime.now()
+        ini_time_for_now =  datetime.now().timestamp()
 
-        future_time = ini_time_for_now + timedelta(hours = 1)
+        future_time =  ini_time_for_now + 1000
 
         self.p1 = Position.objects.create(X=0, Y=0, Z=0, created=ini_time_for_now)
-        self.p2 = Position.objects.create(X=3600, Y=3600, Z=3600, created=future_time)
-
-        duration_in_s = (self.p2.created-self.p1.created).total_seconds()
-        print("Duration in s")
-        print(duration_in_s)
-
-        duration_in_s = (future_time-ini_time_for_now).total_seconds()
-        print("Duration in s")
-        print(duration_in_s)
+        self.p2 = Position.objects.create(X=1, Y=1, Z=1, created=future_time)
 
         print("SETUP")
 

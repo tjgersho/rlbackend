@@ -18,10 +18,12 @@ from django.urls import include, path
 from rest_framework import routers
 from app import urls as appUrls
  
+from .views import home
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
+    path("", home),
     path('api/', include(appUrls)),
     path('admin/', admin.site.urls)
 ]

@@ -1,0 +1,9 @@
+[{
+    "model": "app.rocket",
+    "pk": 1,
+    "fields": {
+      "mission": "Mission One",
+      "launch_date": "2022-12-01"
+    }
+  }
+]
