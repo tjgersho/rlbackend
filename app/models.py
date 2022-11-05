@@ -7,7 +7,7 @@ class Rocket(models.Model):
 
     @property
     def currentPos(self):
-        return self.position.all()
+        return self.position.last()
 
 
 
