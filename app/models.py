@@ -7,9 +7,21 @@ class Rocket(models.Model):
 
     @property
     def currentPos(self):
-        return self.position.last()
+        if self.position.count() > 0:
+            return self.position.all().order_by('created').reverse()[0]
+        return None
 
+    @property
+    def currentVel(self):
+        if self.velocity.count() > 0:
+            return self.velocity.all().order_by('created').reverse()[0]
+        return None
 
+    @property
+    def currentAccel(self):
+        if self.acceleration.count() > 0:
+            return self.acceleration.all().order_by('created').reverse()[0]
+        return None
 
 class Position(models.Model):
     X = models.FloatField(blank=False)
@@ -18,22 +30,19 @@ class Position(models.Model):
     created = models.FloatField()
     rocket = models.ForeignKey(Rocket, related_name="position", on_delete=models.PROTECT, null=True, blank=True)
 
-
-    
  
-
 class Velocity(models.Model):
     Vx = models.FloatField()
     Vy = models.FloatField()
     Vz = models.FloatField()
-    position = models.ForeignKey(Position, related_name="velocity", on_delete=models.PROTECT, null=True, blank=True)
+    rocket = models.ForeignKey(Rocket, related_name="velocity", on_delete=models.PROTECT, null=True, blank=True)
     created = models.FloatField()
 
 class Acceleration(models.Model):
     Ax = models.FloatField()
     Ay = models.FloatField()
     Az = models.FloatField()
-    position = models.ForeignKey(Position, related_name="acceleration", on_delete=models.PROTECT, null=True, blank=True)
+    rocket = models.ForeignKey(Rocket, related_name="acceleration", on_delete=models.PROTECT, null=True, blank=True)
     created = models.FloatField()
 
 
