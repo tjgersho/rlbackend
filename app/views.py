@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User, Group
+from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework import permissions
+from rest_framework.decorators import action
 from .serializers import PositionSerializer, VelocitySerializer, AccelerationSerializer, RocketSerializer
 from .models import Position, Velocity, Acceleration, Rocket
 from rest_framework.response import Response
@@ -53,11 +55,27 @@ class PositionViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['GET'], url_path=r'rocket/(?P<rocketId>[^/.]+)')
+    def get_rocket_positions(self, request, rocketId):
+        rocket = get_object_or_404(Rocket,  pk=rocketId)
+        poistions = rocket.position.all()
+        serializer = PositionSerializer(poistions, many=True)
+        #return JsonResponse(published_serializer.data, safe=False)
+        return Response(serializer.data)
+
 
 class VelocityViewSet(viewsets.ModelViewSet):
 
     queryset = Velocity.objects.all().order_by('created')
     serializer_class = VelocitySerializer
+
+    @action(detail=False, methods=['GET'], url_path=r'rocket/(?P<rocketId>[^/.]+)')
+    def get_rocket_velocities(self, request, rocketId):
+        rocket = get_object_or_404(Rocket,  pk=rocketId)
+        velocities = rocket.velocity.all()
+        serializer = VelocitySerializer(velocities, many=True)
+        #return JsonResponse(published_serializer.data, safe=False)
+        return Response(serializer.data)
 
     def create(self, request):
         pass
@@ -74,7 +92,13 @@ class AccelerationViewSet(viewsets.ModelViewSet):
     queryset = Acceleration.objects.all().order_by('created')
     serializer_class = AccelerationSerializer
 
- 
+    @action(detail=False, methods=['GET'], url_path=r'rocket/(?P<rocketId>[^/.]+)')
+    def get_rocket_accelerations(self, request, rocketId):
+        rocket = get_object_or_404(Rocket,  pk=rocketId)
+        accelerations = rocket.acceleration.all()
+        serializer = AccelerationSerializer(accelerations, many=True)
+        #return JsonResponse(published_serializer.data, safe=False)
+        return Response(serializer.data)
 
     def create(self, request):
         pass

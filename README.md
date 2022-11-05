@@ -65,4 +65,6 @@ python manage.py runserver
 ```
 
 ## [Navigate to localhost:8000](http://localhost:8000)
+
+## Import Postman collection: > ./RLBackend.postman_collection.json
  
