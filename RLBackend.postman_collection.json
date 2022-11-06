@@ -107,6 +107,28 @@
 			"response": []
 		},
 		{
+			"name": "Delete Rocket Data",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8000/api/rocket/2/data/",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"rocket",
+						"2",
+						"data",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "All Rockets Positions",
 			"request": {
 				"method": "GET",
