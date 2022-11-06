@@ -14,10 +14,8 @@ class PositionViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows position to be viewed or edited.
     """
-    queryset = Position.objects.all().order_by('created')
+    queryset = Position.objects.all().order_by('id')
     serializer_class = PositionSerializer
-    # permission_classes = [permissions.IsAuthenticated]
-
 
     def create(self, request):
         serializer_context = {
@@ -29,27 +27,19 @@ class PositionViewSet(viewsets.ModelViewSet):
             X = float(serializer.initial_data["X"]),
             Y =  float(serializer.initial_data["Y"]),
             Z =  float(serializer.initial_data["Z"]),
-            created = datetime.now().timestamp()
+            created = serializer.initial_data["created"]
         )
 
         if serializer.is_valid():
             newPosSaved = serializer.save()
-            print("ROcket.........")
-            print(newPosSaved.rocket.velocity)
-            print(newPosSaved.rocket.velocity.count())
-            print(newPosSaved.rocket.position.count())
             if newPosSaved.rocket.position.count() > 1:
                 lastPos = newPosSaved.rocket.position.order_by('-id')[:2][1]
                 vel = calculateVelocity(lastPos, newPosSaved)
-                vel.rocket = newPosSaved.rocket
-                vel.created = newPos.created
                 vel.save()
 
             if newPosSaved.rocket.velocity.count() > 1:
                 lastVel = newPosSaved.rocket.velocity.order_by('-id')[:2][1]
                 accel = calculateAcceleration(lastVel, vel)
-                accel.rocket = newPosSaved.rocket
-                accel.created = newPos.created
                 accel.save()
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -58,11 +48,15 @@ class PositionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'], url_path=r'rocket/(?P<rocketId>[^/.]+)')
     def get_rocket_positions(self, request, rocketId):
         rocket = get_object_or_404(Rocket,  pk=rocketId)
-        poistions = rocket.position.all()
+        poistions = rocket.position.all().order_by('created')
         serializer = PositionSerializer(poistions, many=True)
-        #return JsonResponse(published_serializer.data, safe=False)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['DELETE'], url_path=r'(?P<rocketId>[^/.]+)/data')
+    def delete_rocket_data(self, request, rocketId):
+        rocket = get_object_or_404(Rocket,  pk=rocketId)
+        poistions = rocket.position.all().delete()
+        return Response(serializer.data, status=204)
 
 class VelocityViewSet(viewsets.ModelViewSet):
 
@@ -72,9 +66,8 @@ class VelocityViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'], url_path=r'rocket/(?P<rocketId>[^/.]+)')
     def get_rocket_velocities(self, request, rocketId):
         rocket = get_object_or_404(Rocket,  pk=rocketId)
-        velocities = rocket.velocity.all()
+        velocities = rocket.velocity.all().order_by('created')
         serializer = VelocitySerializer(velocities, many=True)
-        #return JsonResponse(published_serializer.data, safe=False)
         return Response(serializer.data)
 
     def create(self, request):
@@ -95,7 +88,7 @@ class AccelerationViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'], url_path=r'rocket/(?P<rocketId>[^/.]+)')
     def get_rocket_accelerations(self, request, rocketId):
         rocket = get_object_or_404(Rocket,  pk=rocketId)
-        accelerations = rocket.acceleration.all()
+        accelerations = rocket.acceleration.all().order_by('created')
         serializer = AccelerationSerializer(accelerations, many=True)
         #return JsonResponse(published_serializer.data, safe=False)
         return Response(serializer.data)
@@ -114,4 +107,13 @@ class RocketViewSet(viewsets.ModelViewSet):
 
     queryset = Rocket.objects.all()
     serializer_class = RocketSerializer
+
+
+    @action(detail=False, methods=['DELETE'], url_path=r'(?P<rocketId>[^/.]+)/data')
+    def delete_rocket_data(self, request, rocketId):
+        rocket = get_object_or_404(Rocket,  pk=rocketId)
+        rocket.position.all().delete()
+        rocket.velocity.all().delete()
+        rocket.acceleration.all().delete()
+        return Response(None, status=204)
 

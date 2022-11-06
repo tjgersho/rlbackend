@@ -19,12 +19,6 @@ class PositionSerializer(serializers.ModelSerializer):
         model = Position
         fields = ['id', 'X', 'Y', 'Z', 'created', 'rocket']
 
-    def create(self, validated_data):
-        validated_data["created"] = datetime.now().timestamp()
-        newpos = Position(**validated_data)
-        newpos.save()
-        return newpos
-
  
 
 class RocketSerializer(serializers.ModelSerializer):
