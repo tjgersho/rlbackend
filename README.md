@@ -11,7 +11,9 @@ Python 3.10.7
 
 ## Clone repository and create a .env file in the root
  
-## Fill in details of .env file
+## Fill in details of .env file which point to your database.
+
+## You must crate a database in postgres called `rlbackend` and provide the connection details in the `.env` file.
 
 ### example:
 ```
